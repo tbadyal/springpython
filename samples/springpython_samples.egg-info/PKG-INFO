@@ -1,0 +1,19 @@
+Metadata-Version: 2.1
+Name: springpython-samples
+Version: 1.3.0.FINAL
+Summary: Spring Python samples
+Home-page: http://springpython.webfactional.com
+Author: Greg L. Turnquist
+Author-email: gregturn at mindspring dot com
+License: Apache Software License (http://www.apache.org/licenses/LICENSE-2.0)
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: GNU General Public License (GPL)
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Intended Audience :: Developers
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Programming Language :: Python
+Classifier: Operating System :: OS Independent
+
+A collection of small samples utilizing the features of Spring Python.
+

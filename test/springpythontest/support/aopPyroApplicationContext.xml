@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns="http://www.springframework.org/springpython/schema/pycontainer-components"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/springpython/schema/pycontainer-components
+       		http://springpython.webfactional.com/schema/context/spring-python-pycontainer-context-1.0.xsd">
+
+	<component id="wrappingInterceptor" class="springpythontest.support.testSupportClasses.WrappingInterceptor"/>
+
+	<component id="remoteService1" class="springpythontest.support.testSupportClasses.RemoteService1"/>
+
+	<component id="serviceExporter1" class="springpython.remoting.pyro.PyroServiceExporter">
+		<property name="service_name">"RemoteService1"</property>
+		<property name="service" local="remoteService1"/>
+	</component>
+
+	<component id="clientService1" class="springpython.remoting.pyro.PyroProxyFactory">
+		<property name="service_url">"PYROLOC://localhost:7766/RemoteService1"</property>
+	</component>
+
+	<component id="service1" class="springpython.aop.ProxyFactoryObject">
+		<property name="target" local="clientService1"/>
+		<property name="interceptors">
+			<list local="wrappingInterceptor"/>
+		</property>
+	</component>
+
+	<component id="remoteServiceTarget2" class="springpythontest.support.testSupportClasses.RemoteService1"/>
+
+	<component id="remoteService2" class="springpython.aop.ProxyFactoryObject">
+		<property name="target" local="remoteServiceTarget2"/>
+		<property name="interceptors">
+			<list local="wrappingInterceptor"/>
+		</property>
+	</component>
+
+	<component id="serviceExporter2" class="springpython.remoting.pyro.PyroServiceExporter">
+		<property name="service_name">"RemoteService2"</property>
+		<property name="service" local="remoteService2"/>
+	</component>
+
+	<component id="clientService2" class="springpython.remoting.pyro.PyroProxyFactory">
+		<property name="service_url">"PYROLOC://localhost:7766/RemoteService2"</property>
+	</component>
+
+	<component id="service2" class="springpython.aop.ProxyFactoryObject">
+		<property name="target" local="clientService2"/>
+	</component>
+
+</components>

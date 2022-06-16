@@ -1,0 +1,34 @@
+{% extends "!layout.html" %}
+
+{% block sidebarsearch %}
+  {%- if pagename != "search" %}
+  <div id="searchbox" style="display: none">
+    <h3>{{ _('Quick search') }}</h3>
+      <form class="search" action="{{ pathto('search') }}" method="get">
+        <input type="text" name="q" size="18" />
+        <input type="submit" value="{{ _('Go') }}" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+      <p class="searchtip" style="font-size: 90%">
+      {{ _('Enter search terms or a module, class or function name.') }}
+
+      </p>
+      <h3>Spring Python book</h3>
+      <div style="text-align:center">
+        <br/>
+        <a style="text-decoration:none" href="https://www.packtpub.com/create-powerful-versatile-spring-python-1-1-applications/book">
+        <img src="_images/0660_small.png" alt="Spring Python 1.1 book" />
+        </a>
+        <br/>
+          <span style="width:70%;text-align:center;padding-left:5%;padding-right:5%">
+          <a href="https://www.packtpub.com/create-powerful-versatile-spring-python-1-1-applications/book">Order your copy of the Spring Python book today!</a>
+          </span>
+      </div>
+  </div>
+  <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+  {%- endif %}
+{% endblock %}

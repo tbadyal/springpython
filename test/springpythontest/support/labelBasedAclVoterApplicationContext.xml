@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects xmlns="http://www.springframework.org/springpython/schema/objects"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/springpython/schema/objects
+       		http://springpython.webfactional.com/schema/context/spring-python-context-1.0.xsd">
+            
+    <object id="user_details_service" class="springpython.security.userdetails.InMemoryUserDetailsService">
+	    <property name="user_dict">
+	    	<dict>
+	    		<entry>
+	    			<key><value>blueuser</value></key>
+	    			<tuple><value>password1</value><list><value>LABEL_BLUE</value></list><value>True</value></tuple>
+	    		</entry>
+	    		<entry>
+	    			<key><value>superuser</value></key>
+	    			<tuple><value>password2</value><list><value>LABEL_SHARED</value></list><value>True</value></tuple>
+	    		</entry>
+	    		<entry>
+	    			<key><value>orangeuser</value></key>
+	    			<tuple><value>password3</value><list><value>LABEL_ORANGE</value></list><value>True</value></tuple>
+	    		</entry>
+	    		<entry>
+	    			<key><value>multiuser</value></key>
+	    			<tuple><value>password4</value><list><value>LABEL_BLUE</value><value>LABEL_ORANGE</value></list><value>True</value></tuple>
+	    		</entry>
+	    	</dict>
+        </property>
+    </object>
+
+    <object id="auth_provider" class="springpython.security.providers.dao.DaoAuthenticationProvider">
+	    <property name="user_details_service" ref="user_details_service"/>
+    </object>
+
+    <object id="authenticationProvider" class="springpython.security.providers.AuthenticationManager">
+	    <property name="auth_providers">
+	    	<list><ref object="auth_provider"/></list>
+	    </property>
+    </object>
+		
+	<object id="auth_manager" class="springpython.security.providers.AuthenticationManager">
+		<property name="auth_providers">
+	  		<list><ref object="authenticationProvider"/></list>
+	  </property>
+	</object>
+	
+	<object id="labelBasedAclVoter" class="springpython.security.vote.LabelBasedAclVoter">
+		<property name="label_dict">
+			<dict>
+				<entry>
+					<key><value>LABEL_BLUE</value></key>
+					<list><value>blue</value><value>blue-orange</value></list>
+				</entry>
+				<entry>
+					<key><value>LABEL_ORANGE</value></key>
+					<list><value>orange</value><value>blue-orange</value></list>
+				</entry>
+				<entry>
+					<key><value>LABEL_SHARED</value></key>
+					<list><value>blue</value><value>orange</value><value>blue-orange</value></list>
+				</entry>
+			</dict>
+		</property>
+		<property name="attr_indicating_labeled_op" value="LABELED_OPERATION"/>
+        <property name="allow_access_if_no_attr_labeled"><value>False</value></property>
+	</object>        
+	
+	<object id="access_decision_mgr" class="springpython.security.vote.UnanimousBased">
+		<property name="allow_if_all_abstain"><value>False</value></property>
+		<property name="access_decision_voters">
+			<list><ref object="labelBasedAclVoter"/></list>
+		</property>
+	</object>
+	
+	<object id="securityInteceptor" class="springpython.security.intercept.MethodSecurityInterceptor">
+	  <property name="validate_config_attributes"><value>False</value></property>
+	  <property name="auth_manager" ref="auth_manager"/>
+	  <property name="access_decision_mgr" ref="access_decision_mgr"/>
+	  <property name="obj_def_source">
+	  	<list>
+	  		<tuple>
+	  			<value>springpythontest.support.testSecurityClasses.SampleService.get.*</value>
+	  			<list/>
+	  		</tuple>
+	  		<tuple>
+	  			<value>springpythontest.support.testSecurityClasses.SampleService.do.*</value>
+	  			<list><value>LABELED_OPERATION</value></list>
+	  		</tuple>
+	  	</list>
+	  </property>
+	</object>
+	
+	<object id="targetService" class="springpythontest.support.testSecurityClasses.SampleService"/>
+
+	<object id="sampleService" class="springpython.aop.ProxyFactoryObject">
+		<property name="target" ref="targetService"/>
+		<property name="interceptors">
+			<list><ref object="securityInteceptor"/></list>
+		</property>
+	</object>
+	
+</objects>
